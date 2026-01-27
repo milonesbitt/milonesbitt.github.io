@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milo Nesbitt</title>
-    <link rel="icon" type="image/png" href="/holographic-gradient-circle-Graphics-33366193-1-1-580x386-2.png">
+    <link rel="icon" type="image/png" href="https://static.vecteezy.com/system/resources/thumbnails/015/096/219/small/circle-round-icon-blue-gradient-colours-holiday-celebration-ball-design-elements-png.png">
     <style>
         * {
             margin: 0;
@@ -13,12 +13,13 @@
         }
 
         body {
-            background-color: #191919;
+            background: linear-gradient(to bottom, #191919 50%, #3a3a3a 100%);
             color: #ffffff;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             line-height: 1.6;
             padding: 40px 20px;
             cursor: none;
+            min-height: 100vh;
         }
 
         .container {
@@ -97,6 +98,25 @@
             opacity: 0;
         }
 
+        .cursor-trail {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #0f14a2 0%, #0f14a2 10%, transparent 90%);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.5rem;
@@ -150,11 +170,32 @@
 
     <script>
         const cursorDot = document.querySelector('.cursor-dot');
+        let lastTrailTime = 0;
         
         document.addEventListener('mousemove', (e) => {
             cursorDot.style.left = e.clientX + 'px';
             cursorDot.style.top = e.clientY + 'px';
+
+            // Create trail effect (throttled to every 10ms)
+            const now = Date.now();
+            if (now - lastTrailTime > 10) {
+                createTrailDot(e.clientX, e.clientY);
+                lastTrailTime = now;
+            }
         });
+
+        function createTrailDot(x, y) {
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.style.left = x + 'px';
+            trail.style.top = y + 'px';
+            document.body.appendChild(trail);
+
+            // Remove the trail dot after animation completes
+            setTimeout(() => {
+                trail.remove();
+            }, 500);
+        }
 
         // Hide cursor dot when hovering over links
         const links = document.querySelectorAll('a');
@@ -166,6 +207,16 @@
                 cursorDot.classList.remove('hide');
             });
         });
+
+        // Update gradient based on scroll position
+        function updateGradient() {
+            const scrollY = window.scrollY;
+            const viewportHeight = window.innerHeight;
+            document.body.style.background = `linear-gradient(to bottom, #191919 ${scrollY + viewportHeight * 0.5}px, #3a3a3a ${scrollY + viewportHeight}px)`;
+        }
+
+        window.addEventListener('scroll', updateGradient);
+        updateGradient(); // Initialize on load
     </script>
 </body>
 </html>
