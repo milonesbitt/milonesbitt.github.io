@@ -18,6 +18,7 @@
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             line-height: 1.6;
             padding: 40px 20px;
+            cursor: none;
         }
 
         .container {
@@ -79,6 +80,23 @@
             color: #b4b4b4;
         }
 
+        
+        .cursor-dot {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #0f14a2 0%, #0f14a2 10%, transparent 90%);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.2s ease;
+        }
+
+        .cursor-dot.hide {
+            opacity: 0;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 1.5rem;
@@ -127,5 +145,27 @@
             <li>Art in football stadiums, <em><span class="grey-text">Art Review Oxford</span></em></li>
         </ul>
     </div>
+
+    <div class="cursor-dot"></div>
+
+    <script>
+        const cursorDot = document.querySelector('.cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        // Hide cursor dot when hovering over links
+        const links = document.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hide');
+            });
+            link.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hide');
+            });
+        });
+    </script>
 </body>
 </html>
